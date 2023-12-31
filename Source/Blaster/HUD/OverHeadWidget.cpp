@@ -1,7 +1,8 @@
-#include "OverHeadWidget.h"
+#include "OverheadWidget.h"
 #include "Components/TextBlock.h"
+#include "GameFramework/PlayerState.h"
 
-void UOverHeadWidget::SetDisplayText(FString TextToDisplay)
+void UOverheadWidget::SetDisplayText(FString TextToDisplay)
 {
     if (DisplayText)
     {
@@ -9,8 +10,7 @@ void UOverHeadWidget::SetDisplayText(FString TextToDisplay)
     }
 }
 
-
-void UOverHeadWidget::ShowPlayerNetRole(APawn* InPawn)
+void UOverheadWidget::ShowPlayerNetRole(APawn* InPawn)
 {
 	ENetRole RemoteRole = InPawn->GetRemoteRole();
 	FString Role;
@@ -29,10 +29,22 @@ void UOverHeadWidget::ShowPlayerNetRole(APawn* InPawn)
 		Role = FString("None");
 		break;
 	}
-	SetDisplayText(FString::Printf(TEXT("Remote Role: %s"), *Role));
+	FString RemoteRoleString = FString::Printf(TEXT("Remote Role: %s"), *Role);
+	SetDisplayText(RemoteRoleString);
 }
 
-void UOverHeadWidget::NativeDestruct()
+void UOverheadWidget::ShowPlayerName(APawn* InPawn)
+{
+	if (InPawn->GetRemoteRole() == ENetRole::ROLE_AutonomousProxy) return;
+	
+	APlayerState* PlayerState = InPawn->GetPlayerState();
+	if (PlayerState)
+	{
+		SetDisplayText(PlayerState->GetPlayerName());
+	}
+}
+
+void UOverheadWidget::NativeDestruct()
 {
     RemoveFromParent();
     Super::NativeDestruct();

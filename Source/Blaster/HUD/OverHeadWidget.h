@@ -2,13 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "OverHeadWidget.generated.h"
+#include "OverheadWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BLASTER_API UOverHeadWidget : public UUserWidget
+class BLASTER_API UOverheadWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -20,6 +20,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ShowPlayerNetRole(APawn* InPawn);
+
+	UFUNCTION(BlueprintCallable)
+	void ShowPlayerName(APawn* InPawn);
 
 protected:
 	virtual void NativeDestruct() override;
