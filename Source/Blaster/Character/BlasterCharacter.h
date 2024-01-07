@@ -38,11 +38,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void PostInitializeComponents() override;
 
 protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void Equip(const FInputActionValue& Value);
+	void EquipButtonPressed(const FInputActionValue& Value);
 
 protected:
 	virtual void BeginPlay() override;
@@ -60,11 +61,14 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	class AWeapon* OverlappingWeapon;
 
+	UFUNCTION()
+	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
+
 	UPROPERTY(VisibleAnywhere)
 	class UCombatComponent* Combat;
 
-	UFUNCTION()
-	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
+	UFUNCTION(Server, Reliable)
+	void ServerEquipButtonPressed();
 
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
